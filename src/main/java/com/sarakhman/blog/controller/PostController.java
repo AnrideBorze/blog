@@ -18,6 +18,7 @@ public class PostController {
         return postServices.getAllPosts();
     }
 
+
     @PutMapping("/api/v1/posts")
     public Post addNewPost(@RequestBody Post post) {
         return postServices.addNewPost(post);
