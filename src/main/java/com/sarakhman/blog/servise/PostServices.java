@@ -5,7 +5,10 @@ import com.sarakhman.blog.entity.Post;
 import com.sarakhman.blog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,5 +44,40 @@ public class PostServices implements PostServicesInterface {
 
     public void deletePost(long idPost) {
         postRepository.deleteById(idPost);
+    }
+
+    public List<Post> sortedByTitle(){
+        List<Post> posts = postRepository.findAll();
+        List<String> postsTitle = new ArrayList<>();
+        int number = 0;
+        for (Post post : posts) {
+            postsTitle.add(number, post.getTitle());
+            number++;
+        }
+        Collections.sort(postsTitle);
+        List<Post> postsCopyForWork = new ArrayList<>();
+        Collections.copy(postsCopyForWork, posts);
+        List<Post> sortedList = new ArrayList<>();
+        int size = 0;
+        for (Post post : postsCopyForWork) {
+            if(Objects.equals(postsTitle.get(size),post.getTitle())){
+                sortedList.add(post);
+                postsCopyForWork.remove(post);
+                size++;
+            }
+        }
+
+        return sortedList;
+    }
+
+    public List<Post> searchByTitle(@PathVariable(":title") String title) {
+        List<Post> posts = postRepository.findAll();
+        List<Post> postWithTitle = new ArrayList<>();
+        for (Post post : posts) {
+            if (Objects.equals(post.getTitle(), title)) {
+                postWithTitle.add(post);
+            }
+        }
+        return postWithTitle;
     }
 }

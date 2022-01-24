@@ -5,7 +5,7 @@ import com.sarakhman.blog.servise.PostServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/posts")
@@ -33,5 +33,16 @@ public class PostController {
     @DeleteMapping("{id}")
     public void deletePost(@PathVariable("id") long idPost) {
         postServices.deletePost(idPost);
+    }
+
+    @GetMapping("?title=:{title}")
+    public List<Post> searchByTitle(@PathVariable("title") String title) {
+        return postServices.searchByTitle(title);
+    }
+
+    @GetMapping("?sort=title")
+    public List<Post> sortByTitle() {
+        return postServices.sortedByTitle();
+
     }
 }
