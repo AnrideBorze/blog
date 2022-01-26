@@ -26,19 +26,19 @@ public class PostServices implements PostServicesInterface {
         return postRepository.save(post);
     }
 
-    public Post editPost(long postId,Post post) {
+    public Post editPost(long postId, Post post) {
         Post postForWork = getById(postId);
 
-        if(Objects.nonNull(post.getTitle())&&!post.getTitle().equals("")){
+        if (Objects.nonNull(post.getTitle()) && !post.getTitle().equals("")) {
             postForWork.setTitle(post.getTitle());
         }
-        if(Objects.nonNull(post.getContent())&&!post.getContent().equals("")){
+        if (Objects.nonNull(post.getContent()) && !post.getContent().equals("")) {
             postForWork.setContent(post.getContent());
         }
         return postRepository.save(postForWork);
     }
 
-    public Post getById(long id){
+    public Post getById(long id) {
         return postRepository.getById(id);
     }
 
@@ -46,7 +46,7 @@ public class PostServices implements PostServicesInterface {
         postRepository.deleteById(idPost);
     }
 
-    public List<Post> sortedByTitle(){
+    public List<Post> sortedByTitle() {
         List<Post> posts = postRepository.findAll();
         List<String> postsTitle = new ArrayList<>();
         int number = 0;
@@ -60,7 +60,7 @@ public class PostServices implements PostServicesInterface {
         List<Post> sortedList = new ArrayList<>();
         int size = 0;
         for (Post post : postsCopyForWork) {
-            if(Objects.equals(postsTitle.get(size),post.getTitle())){
+            if (Objects.equals(postsTitle.get(size), post.getTitle())) {
                 sortedList.add(post);
                 postsCopyForWork.remove(post);
                 size++;
@@ -79,5 +79,36 @@ public class PostServices implements PostServicesInterface {
             }
         }
         return postWithTitle;
+    }
+
+    public List<Post> getAllTopPosts() {
+        List<Post> allPosts = getAllPosts();
+        List<Post> postsWithStar = new ArrayList<>();
+        for (Post currentPost : allPosts) {
+            if (currentPost.isStar()) {
+                postsWithStar.add(currentPost);
+            }
+        }
+        return postsWithStar;
+    }
+
+    public boolean addStarForPost(Long id) {
+        Post post = postRepository.getById(id);
+        if (post.isStar()) {
+            return true;
+        }
+        post.setStar(true);
+        editPost(id, post);
+        return true;
+    }
+
+    public boolean deleteStarFromPost(Long id) {
+        Post post = postRepository.getById(id);
+        if (!post.isStar()) {
+            return false;
+        }
+        post.setStar(false);
+        editPost(id, post);
+        return false;
     }
 }

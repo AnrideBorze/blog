@@ -1,24 +1,35 @@
 package com.sarakhman.blog.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.Builder;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "BlogDB")
+@Builder
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "post_seq")
+    @SequenceGenerator(name="post_seq", sequenceName = "SEQ_POST",allocationSize = 50)
     long id;
     String title;
     String content;
+
+    public boolean isStar() {
+        return star;
+    }
+
+    public void setStar(boolean star) {
+        this.star = star;
+    }
+
+    boolean star;
 
     public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -38,11 +49,12 @@ public class Post {
         this.content = content;
     }
 
-    public Post(int id, String title, String content) {
+    public Post(long id, String title, String content, boolean star) {
 
         this.id = id;
         this.title = title;
         this.content = content;
+        this.star = star;
     }
 
     public Post() {

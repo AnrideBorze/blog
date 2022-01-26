@@ -45,4 +45,20 @@ public class PostController {
         return postServices.sortedByTitle();
 
     }
+
+    @GetMapping("/star")
+    public List<Post> getAllTopPosts (){
+        return postServices.getAllTopPosts();
+    }
+
+    @PutMapping("/{id}/star")
+    public boolean addStarForPost(@PathVariable("id")Long id){
+        return postServices.addStarForPost(id);
+    }
+
+    @DeleteMapping("/{id}/star")
+    public boolean deleteStarFromPost(@PathVariable("id")Long id){
+        return postServices.deleteStarFromPost(id);
+    }
+
 }
